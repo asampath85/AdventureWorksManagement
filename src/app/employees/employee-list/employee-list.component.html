@@ -1,12 +1,13 @@
 <div class="card">
   <div class="card-header bg-light">
-    <h5 class="text-info" > Welcome Aswin Sampath</h5>
+    <h5 class="text-info"> Welcome Aswin Sampath</h5>
   </div>
   <div class="card-body bg-light">
-    <p-table [value]="employees" [paginator]="true" [rows]="10">
-        <ng-template pTemplate="caption">
-            List of Employees
-        </ng-template>
+    <p-table [value]="employees" selectionMode="single" [(selection)]="employee" [paginator]="true" (onRowSelect)="onEmployeeSelect($event)"
+      [rows]="10" dataKey="businessEntityID">
+      <ng-template pTemplate="caption">
+        List of Employees
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th *ngFor="let col of cols">
@@ -15,7 +16,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-emp>
-        <tr>
+        <tr [pSelectableRow]="emp">
           <td *ngFor="let col of cols">
             <div [ngSwitch]="col.field">
               <div *ngSwitchCase="'birthDate'">
@@ -30,5 +31,14 @@
       </ng-template>
     </p-table>
   </div>
-
+  <div class="card-footer bg-light">
+    <button type="button" pButton icon="pi pi-plus" label="Add" (click)="onAddEmployee()"></button>
+  </div>
+  <p-dialog [header]="dialogHeader" [(visible)]="showEmployeeDialog" modal="true" responsive="true" [width]="600"
+    [minWidth]="200" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+    <app-employee-detail [employeeDetail]="employee" (saveEmployeeDetail)="saveEmployeeDetail($event)"
+      (cancelEmployeeDetail)="cancelEmployeeDetail($event)">
+    </app-employee-detail>
+  </p-dialog>
 </div>
+<div>{{employee?.firstName}}</div>

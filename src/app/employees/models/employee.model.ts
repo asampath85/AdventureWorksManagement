@@ -1,4 +1,7 @@
-export interface EmployeeModel {
+export class EmployeeModel {
+    constructor() {
+    }
+
     businessEntityID: number;
     nationalIDNumber: string;
     loginID: string;
