@@ -29,8 +29,8 @@ export class EmployeeDetailComponent implements OnInit {
       firstName: '',
       lastName: '',
       loginID: '',
-      // hireDate: '',
-      // birthDate: '',
+      hireDate: '',
+      birthDate: '',
       nationalIDNumber: '',
       jobTitle: '',
       gender: 'M',
@@ -48,12 +48,17 @@ export class EmployeeDetailComponent implements OnInit {
         firstName: this._employeeDetail.firstName,
         lastName: this._employeeDetail.lastName,
         loginID: this._employeeDetail.loginID,
-        // hireDate: this._employeeDetail.hireDate,
-        // birthDate: {
-        //   day: new Date(this._employeeDetail.birthDate).getUTCDate(),
-        //   month: new Date(this._employeeDetail.birthDate).getUTCMonth() + 1,
-        //   year: new Date(this._employeeDetail.birthDate).getUTCFullYear()
-        // }, // this._employeeDetail.birthDate,
+
+        hireDate: {
+          day: new Date(this._employeeDetail.hireDate).getUTCDate(),
+          month: new Date(this._employeeDetail.hireDate).getUTCMonth() + 1,
+          year: new Date(this._employeeDetail.hireDate).getUTCFullYear()
+        },
+        birthDate: {
+          day: new Date(this._employeeDetail.birthDate).getUTCDate(),
+          month: new Date(this._employeeDetail.birthDate).getUTCMonth() + 1,
+          year: new Date(this._employeeDetail.birthDate).getUTCFullYear()
+        },
         nationalIDNumber: this._employeeDetail.nationalIDNumber,
         jobTitle: this._employeeDetail.jobTitle,
         // gender: this._employeeDetail.gender,

@@ -59,8 +59,10 @@ export class EmployeeListComponent implements OnInit {
     this.showEmployeeDialog = false;
   }
 
-  saveEmployeeDetail(event: EmployeeModel) {
+  saveEmployeeDetail(event: any) {
     // alert(JSON.stringify(event));
+    event.birthDate = new Date(event.birthDate.year, event.birthDate.month - 1, event.birthDate.day);
+    event.hireDate = new Date(event.hireDate.year, event.hireDate.month - 1, event.hireDate.day);
     this.employeeService.addEmployee(event).subscribe(
       response => {
         this.toastrService.success('Employee saved succesfully..', 'EMPLYEE DETAILS');
