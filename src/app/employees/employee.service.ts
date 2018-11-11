@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { EmployeeModel } from './models/employee.model';
 import { catchError } from 'rxjs/operators';
+import { UniqueIdValidatorModel } from './models/uniqueIdValidator.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class EmployeeService {
 
   addEmployee(employee: EmployeeModel): Observable<any> {
     return this.httpClient.post(this.baseURL, employee).pipe(catchError(this.handleError));
+  }
+
+  loginIdCheck(model: UniqueIdValidatorModel): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.baseURL}/userIdCheck`, model).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

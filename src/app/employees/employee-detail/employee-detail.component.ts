@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { EmployeeModel } from '../models/employee.model';
+import { DateValidator } from '../validators/date.validator';
+import { EmployeeService } from '../employee.service';
+import { of, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UniqueIdValidator } from '../validators/uniqueId.validator';
 
 @Component({
   selector: 'app-employee-detail',
@@ -11,6 +16,7 @@ export class EmployeeDetailComponent implements OnInit {
 
   employeeForm: FormGroup;
   private _employeeDetail: EmployeeModel;
+  submitted = false;
 
   @Input()
   set employeeDetail(employeeDetail: EmployeeModel) {
@@ -18,32 +24,40 @@ export class EmployeeDetailComponent implements OnInit {
     this.initializeEmployeeDetail();
   }
 
+  get f() {
+    return this.employeeForm.controls;
+  }
+
   @Output() saveEmployeeDetail: EventEmitter<EmployeeModel> = new EventEmitter<EmployeeModel>();
 
   @Output() cancelEmployeeDetail: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private uniqueIdValidator: UniqueIdValidator) { }
 
   ngOnInit() {
     this.employeeForm = this.formBuilder.group({
-      firstName: '',
-      lastName: '',
-      loginID: '',
-      hireDate: '',
-      birthDate: '',
-      nationalIDNumber: '',
-      jobTitle: '',
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      loginID: ['', [Validators.required]],
+      hireDate: ['', [Validators.required, DateValidator.validateAge(1)]],
+      birthDate: ['', [Validators.required, DateValidator.validateAge(18)]],
+      nationalIDNumber: ['', Validators.required],
+      jobTitle: ['', Validators.required],
       gender: 'M',
       maritalStatus: 'M',
       salariedFlag: true,
       currentFlag: true,
-      vacationHours: '',
-      sickLeaveHours: ''
+      vacationHours: ['', Validators.required],
+      sickLeaveHours: ['', Validators.required]
     });
   }
 
   initializeEmployeeDetail() {
+    this.submitted = false;
     if (this._employeeDetail !== undefined) {
+      this.f.loginID.setAsyncValidators(
+        [this.uniqueIdValidator.validateLoginId(this._employeeDetail.businessEntityID).bind(this.uniqueIdValidator)]);
+
       this.employeeForm.patchValue({
         firstName: this._employeeDetail.firstName,
         lastName: this._employeeDetail.lastName,
@@ -73,7 +87,12 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   saveEmployee() {
-    this.saveEmployeeDetail.emit(this.employeeForm.value);
+    this.submitted = true;
+    if (this.employeeForm.valid) {
+      this.saveEmployeeDetail.emit(this.employeeForm.value);
+    } else {
+      // alert(this.f.firstName.errors.required);
+    }
   }
 
   onSaveClicked() {
@@ -83,5 +102,4 @@ export class EmployeeDetailComponent implements OnInit {
   onCancelClicked() {
     this.cancelEmployeeDetail.emit('');
   }
-
 }

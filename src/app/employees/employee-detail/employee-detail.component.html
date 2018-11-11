@@ -3,19 +3,35 @@
     <div class="form-group row">
       <label class="col-sm-4 col-form-label">First Name</label>
       <div class="col-sm-6">
-        <input type="text" class="form-control" formControlName="firstName" />
+        <input type="text" class="form-control" formControlName="firstName" [ngClass]="{'is-invalid': submitted && f.firstName.errors}" />
+        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+          <div *ngIf="f.firstName.errors.required">First name is required</div>
+        </div>
       </div>
     </div>
     <div class="form-group row">
       <label class="col-sm-4 col-form-label">Last Name</label>
       <div class="col-sm-6">
-        <input type="text" class="form-control" formControlName="lastName" />
+        <input type="text" class="form-control" formControlName="lastName" [ngClass]="{'is-invalid': submitted && f.lastName.errors}" />
+        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+          <div *ngIf="f.lastName.errors.required">Last name is required</div>
+        </div>
       </div>
     </div>
     <div class="form-group row">
       <label class="col-sm-4 col-form-label">Login Id</label>
       <div class="col-sm-6">
-        <input type="text" class="form-control" formControlName="loginID" />
+        <input type="text" class="form-control" formControlName="loginID" [ngClass]="{'is-invalid': f.loginID.errors}" />
+        <div *ngIf="f.loginID.errors">
+          <div *ngIf="f.loginID.errors.required" class="text-danger">LoginId is required</div>
+          <div *ngIf="f.loginID.errors.loginIdExists" class="text-danger">Login Id has been taken</div>
+        </div>
+        <div *ngIf="f.loginID.valid" class="text-success">
+          {{ f.loginID.value }} is available
+        </div>        
+        <div *ngIf="f.loginID.pending" class="text-info">
+          Hold tight... Checking availability of {{ f.loginID.value }}
+        </div>
       </div>
     </div>
     <div class="form-group row">
@@ -23,9 +39,13 @@
       <div class="col-sm-6">
         <div class="input-group">
           <input class="form-control" placeholder="yyyy-mm-dd" formControlName="birthDate" ngbDatepicker
-            #birthDatePicker="ngbDatepicker">
+            #birthDatePicker="ngbDatepicker" [ngClass]="{'is-invalid': submitted && f.birthDate.errors}" />
           <div class="input-group-append">
             <button class="btn btn-outline-secondary pi pi-calendar" (click)="birthDatePicker.toggle()" type="button"></button>
+          </div>
+          <div *ngIf="submitted && f.birthDate.errors" class="invalid-feedback">
+            <div *ngIf="f.birthDate.errors.required">Birth date is required</div>
+            <div *ngIf="f.birthDate.errors.invalidAge">You should be above 18</div>
           </div>
         </div>
       </div>
@@ -34,17 +54,29 @@
       <label class="col-sm-4 col-form-label">Hire Date</label>
       <div class="col-sm-6">
         <div class="input-group">
-          <input class="form-control" placeholder="yyyy-mm-dd" formControlName="hireDate" ngbDatepicker #hireDatePicker="ngbDatepicker">
+          <input class="form-control" placeholder="yyyy-mm-dd" formControlName="hireDate" ngbDatepicker 
+          #hireDatePicker="ngbDatepicker" [ngClass]="{'is-invalid': submitted && f.hireDate.errors}" />
           <div class="input-group-append">
             <button class="btn btn-outline-secondary pi pi-calendar" (click)="hireDatePicker.toggle()" type="button"></button>
           </div>
+          <div *ngIf="submitted && f.hireDate.errors" class="invalid-feedback">
+              <div *ngIf="f.hireDate.errors.required">Hire date is required</div>
+              <div *ngIf="f.hireDate.errors.invalidAge">Employee should have been hired atleast one year back</div>
+            </div>
         </div>
       </div>
     </div>
     <div class="form-group row">
       <label class="col-sm-4 col-form-label">National Id</label>
       <div class="col-sm-6">
-        <input type="text" class="form-control" formControlName="nationalIDNumber" />
+        <input type="text" class="form-control" formControlName="nationalIDNumber" [ngClass]="{'is-invalid': submitted && f.nationalIDNumber.errors}" />
+        <div *ngIf="f.nationalIDNumber.errors">
+            <div *ngIf="f.nationalIDNumber.errors.required" class="text-danger">National Id is required</div>
+            <div *ngIf="f.nationalIDNumber.errors.nationalIdExists" class="text-danger">National Id should be unique</div>
+          </div>       
+          <div *ngIf="f.nationalIDNumber.pending" class="text-info">
+            Hold tight... Checking availability of {{ f.nationalIDNumber.value }}
+          </div>
       </div>
     </div>
     <div class="form-group row">
