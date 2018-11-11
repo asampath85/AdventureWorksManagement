@@ -19,20 +19,14 @@ export class TokenInterceptor implements HttpInterceptor {
             });
         }
 
-       return next.handle(req).pipe(catchError(error => {
-        if (error.status === 401) {
-            // localStorage.removeItem('credential');
-            this.toastr.error('Session expired... Please login again', 'SESSION EXPIRED');
-            this.router.navigate(['/login']);
-            return of(error);
-        }
-        return throwError('something bad happened; please try again later.');
-       }));
+        return next.handle(req).pipe(catchError(this.handleError.bind(this)));
+
     }
 
     handleError(error: any) {
         if (error.status === 401) {
             // localStorage.removeItem('credential');
+            this.toastr.error('Session expired... Please login again', 'SESSION EXPIRED');
             this.router.navigate(['/login']);
             return of(error);
         }
